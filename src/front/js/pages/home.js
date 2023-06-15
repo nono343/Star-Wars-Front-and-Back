@@ -1,26 +1,40 @@
-import React, { useContext } from "react";
-import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import React, { useContext, useEffect } from "react";
 import "../../styles/home.css";
+import { Context } from "../store/appContext"
+import { CharactertCard } from "../component/characterCard";
+import { PlanetCard } from "../component/planetCard";
+
 
 export const Home = () => {
-	const { store, actions } = useContext(Context);
-
+	const { store, actions } = useContext(Context)
+	useEffect(() => {
+		actions.obtenerPersonajes()
+		actions.obtenerPlanetas()
+	}, [])
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
+		<div className="container-fluid text-center mt-5">
+			<h1>Personajes</h1>
+			<div className="scrollcards mt-5">
+				{store && store.personajes?.map((personaje) => {
+					return (
+						<CharactertCard
+							key={personaje.name}
+							personaje={personaje}
+						/>
+					);
+				})}
 			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://start.4geeksacademy.com/starters/react-flask">
-					Read documentation
-				</a>
-			</p>
+			<h1 className="mt-5">Planetas</h1>
+			<div className="scrollcards mt-5"> 
+				{store && store.planetas?.map((planeta) => {
+					return (
+						<PlanetCard
+							key={planeta.name}
+							planeta={planeta}
+						/>
+					);
+				})}
+			</div>
 		</div>
 	);
-};
+}

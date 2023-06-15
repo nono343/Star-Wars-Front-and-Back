@@ -1,7 +1,58 @@
-/*
-    home.css: This website contains selectors only used in home.css
-
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+section {
+    margin-top: 40px;
+  }
+  
+  .card {
+    border: 2px;
+    margin: 10px 4px;
+    transition: .6s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-block {
+    padding: 10px;
+  }
+  
+  .scrollcards {
+    background-color: #fff;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .scrollcards::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f1f1f1;
+  }
+  
+  .scrollcards::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 8px;
+  }
+  
+  .scrollcards::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+  
+  .scrollcards::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
+  
+  .scrollcards::-webkit-scrollbar-track:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .scrollcards::-webkit-scrollbar-corner {
+    background-color: #f1f1f1;
+  }
+  
+  div.scrollcards .card {
+    display: inline-block;
+    padding: 14px;
+    text-decoration: none;
+    height: auto;
+    width: 300px;
+  }
+  

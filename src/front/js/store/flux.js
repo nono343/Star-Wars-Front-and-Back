@@ -1,53 +1,75 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			personajes: null,
+			planetas: null,
+			favoritos: [],
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+			obtenerPersonajes: () => {
+				const store = getStore();
+				if (store.personajes) {
+					// Si los personajes ya están en store no es necesario hacer Fetch nuevamente
+					return;
+				}
 
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
+				fetch("https://swapi.dev/api/people/")
+					.then(response => response.json())
+					.then(data => {
+						setStore({ personajes: data.results });
+						// Guardar el store en el almacenamiento local
+						const updatedStore = { ...getStore(), personajes: data.results };
+						localStorage.setItem("store", JSON.stringify(updatedStore));
+					});
+			},
+			obtenerPlanetas: () => {
+				const store = getStore();
+				if (store.planetas) {
+					// Si los planetas ya están en el store no es necesario hacer Fetch nuevamente
+					return;
+				}
+
+				fetch("https://swapi.dev/api/planets/")
+					.then(response => response.json())
+					.then(data => {
+						setStore({ planetas: data.results });
+						// Guardar el store en el almacenamiento local
+						const updatedStore = { ...getStore(), planetas: data.results };
+						localStorage.setItem("store", JSON.stringify(updatedStore));
+					});
+			},
+			restoreStoreFromLocalStorage: () => {
+				const storedStore = localStorage.getItem("store");
+				if (storedStore) {
+					// Restaurar el store desde el almacenamiento local
+					setStore(JSON.parse(storedStore));
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+			clearStore: () => {
+				// Limpiar y eliminar del almacenamiento local
+				setStore({
+					personajes: null,
+					planetas: null,
+					favoritos: []
 				});
-
-				//reset the global store
-				setStore({ demo: demo });
+				localStorage.removeItem("store");
+			},
+			handleFavoriteClick: (name) => {
+				const store = getStore();
+				if (store.favoritos.includes(name)) {
+					let filterFavorites = store.favoritos.filter(favorito => favorito !== name);
+					setStore({ favoritos: filterFavorites });
+				} else {
+					const updatedFavorites = [...store.favoritos, name];
+					setStore({
+						favoritos: updatedFavorites
+					});
+				}
+				// Guardar el store en el almacenamiento local
+				const updatedStore = { ...getStore(), favoritos: store.favoritos };
+				localStorage.setItem("store", JSON.stringify(updatedStore));
 			}
-		}
+		},
 	};
 };
 
